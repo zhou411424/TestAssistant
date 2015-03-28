@@ -35,6 +35,10 @@ public class TAUtils {
 		return OS_TYPE_UNKNOWN;
 	}
 
+	/**
+	 * 获取当前系统中Android环境的根目录
+	 * @return
+	 */
 	public static String getAndroidHome() {
 		String androidHome = "";
 		int osType = getOSType();
@@ -73,6 +77,10 @@ public class TAUtils {
 		return androidHome;
 	}
 
+	/**
+	 * 获取adb在当前系统中的位置
+	 * @return
+	 */
 	public static String getAdbLocation() {
 		String adbLocation = "";
 		String androidHome = getAndroidHome(); 
@@ -80,13 +88,16 @@ public class TAUtils {
 		int osType = getOSType();
 		switch (osType) {
 		case OS_TYPE_WINDOWS:
-			adbLocation = androidHome + File.separator
-			+ "platform-tools" + File.separator + "adb.exe";
+			adbLocation = androidHome + File.separator + "platform-tools"
+					+ File.separator + "adb.exe";
 			break;
 		case OS_TYPE_LINUX:
 		case OS_TYPE_MACOSX:
-			adbLocation = androidHome + File.separator
-			+ "platform-tools"+ File.separator+ "adb";
+			adbLocation = androidHome + File.separator + "platform-tools"
+					+ File.separator + "adb";
+			if(adbLocation.equals("")) {
+				adbLocation = "assets/macosx_adb/adb";
+			}
 			break;
 		case OS_TYPE_UNKNOWN:
 			adbLocation = "unknown os type, can't get adb location.";
@@ -95,15 +106,13 @@ public class TAUtils {
 		return adbLocation;
 	}
 
+	/**
+	 * 获取PC端的调试桥
+	 * @return
+	 */
 	public static AndroidDebugBridge getAdb() {
-		Logger.d("getAdb...");
-		String adbLocation = System.getProperty("com.android.screenshot.bindir");
-		Logger.d("adbLocation="+adbLocation);
-		if(adbLocation != null && adbLocation.length() != 0) {
-			adbLocation += File.separator + "adb";
-		} else {
-			adbLocation = "adb";
-		}
+		Logger.i(TAG+"==>getAdb...");
+		String adbLocation = getAdbLocation();
 		if(mAdb != null) {
 			return mAdb;
 		}
@@ -232,6 +241,7 @@ public class TAUtils {
 	 * @return
 	 */
 	public static boolean installApk(String apkPath, String deviceSN, boolean isHandleLowMemory) {
+		Logger.i(TAG+"==>installApk...getAdbLocation="+getAdbLocation());
 		String cmd = getAdbLocation()+" -s " + deviceSN + " install " + apkPath;
 		String result = null;
 		try {
