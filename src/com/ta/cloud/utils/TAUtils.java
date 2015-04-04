@@ -65,7 +65,7 @@ public class TAUtils {
 			}
 			break;
 		case OS_TYPE_LINUX:
-			androidHome = "/home/zhoulc/work/tools/android-sdks";
+			androidHome = "/home/zhoulc/work/tools/android-sdk-linux";
 			break;
 		case OS_TYPE_MACOSX:
 			androidHome = "/Users/zhouliancheng/work/tools/android-sdk-macosx";
@@ -88,15 +88,27 @@ public class TAUtils {
 		int osType = getOSType();
 		switch (osType) {
 		case OS_TYPE_WINDOWS:
-			adbLocation = androidHome + File.separator + "platform-tools"
-					+ File.separator + "adb.exe";
+			if(androidHome == null || androidHome.equals("")) {
+				adbLocation = "assets/windows_adb/adb.exe";
+			} else {
+				adbLocation = androidHome + File.separator + "platform-tools"
+						+ File.separator + "adb.exe";
+			}
 			break;
 		case OS_TYPE_LINUX:
+			if(androidHome == null || androidHome.equals("")) {
+				adbLocation = "assets/linux_adb/adb";
+			} else {
+				adbLocation = androidHome + File.separator + "platform-tools"
+						+ File.separator + "adb";
+			}
+			break;
 		case OS_TYPE_MACOSX:
-			adbLocation = androidHome + File.separator + "platform-tools"
-					+ File.separator + "adb";
-			if(adbLocation.equals("")) {
+			if(androidHome == null || androidHome.equals("")) {
 				adbLocation = "assets/macosx_adb/adb";
+			} else {
+				adbLocation = androidHome + File.separator + "platform-tools"
+						+ File.separator + "adb";
 			}
 			break;
 		case OS_TYPE_UNKNOWN:
@@ -427,7 +439,6 @@ public class TAUtils {
 		sbErr = null;
 		pt.timeout = 0;
 		pt = null;
-
 		
 		return returnVal;
 	}
